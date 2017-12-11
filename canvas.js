@@ -10,9 +10,14 @@ ctx.canvas.width  = window.innerWidth;
 ctx.canvas.height = window.innerHeight;
 
 const backgroundImg = new Image();
-backgroundImg.src = "https://s3.envato.com/files/170596024/City_Background_Ny_4267x2133.jpg"; 
-//https://s3.envato.com/files/170596024/City_Background_Ny_4267x2133.jpg
-//https://s3.envato.com/files/162652205/City_Background_4267x2133.jpg
+backgroundImg.src = "cityNight.png";
+
+// when it goes up it should smoothly transist to space
+// with a rose in the center (Al-Karmir)
+// and Tigrovvy background with some cool electric Blue with Bordoi
+// and Tatul music
+// many romantic, very luv, such xore ~
+// #վարագույր
 
 const column_height = 50; // better set as the part of the object column.height
 const column_width = 300;
@@ -111,7 +116,7 @@ const isGameOver = function() {
 };
 				
 const draw = function() {
-	ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height); // low-performance on this pic
+	ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height); // low-performance on this pic?
 	/*ctx.fillStyle = "White";
 	ctx.fillRect(0, 0, canvas.width, canvas.height);*/
 	ctx.fillStyle = "Black";
