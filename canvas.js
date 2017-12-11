@@ -1,6 +1,6 @@
 // canvas height constantly added?
-// replace context with ctx
-// redefined some variables for clarity
+// score jumps up by 5
+// line 157?
 
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
@@ -8,23 +8,26 @@ ctx.canvas.width  = window.innerWidth;
 ctx.canvas.height = window.innerHeight;
 
 const backgroundImg = new Image();
-backgroundImg.src = ""; //https://s3.envato.com/files/170596024/City_Background_Ny_4267x2133.jpg or 
+backgroundImg.src = ""; 
+//https://s3.envato.com/files/170596024/City_Background_Ny_4267x2133.jpg
 //https://s3.envato.com/files/162652205/City_Background_4267x2133.jpg
 
 const column_height = 50;
 const column_width = 200;
 const initial_height = 3;
-const tower_height_max = 12;
-const move_down = 1;
+const tower_height_max = 12; // determines starting height to go up from
+// ^ canvas is deleted? we may need scrolldown() at the end
+const move_down = 1.5; // the speed of canvas scope going up
 let moving = true; 
-let moving_down = false;
+let moving_down = false; // if true moves down after the game starts?
 
 const colors = ["Red", "Green", "Blue", "Yellow"];
 const tower = [];
 let moving_column;
-let level = 0;
+let score = 0;
 let initial_speed = 3;
-let perfect_count = 0;
+let perfect_count = 5; // not clear
+let gameInProgress = true; // can't find it anywhere else
 
 const spacebar = 32;
 
@@ -41,17 +44,25 @@ document.addEventListener("keydown", function(event) {
 	}
 }, false); 
 
+const random = function(num) {
+	return Math.floor(Math.random() * num);
+};
+
+const addBonus = function() {
+	score += 4;
+	perfect_count = 0;
+};
+
 const isPerfect = function() {
 	if (tower.length < 2) {
 		return;
-                    }
+	}
 	if (Math.abs(tower[tower.length - 1].x - tower[tower.length - 2].x) <= 10 &&
 	Math.abs(tower[tower.length - 1].width - tower[tower.length - 2].width) <=10) {
-		perfect_count ++;
-                    }    
+		perfect_count++;
+	}    
 	if (perfect_count >= 5) {
-		level += 4;
-		perfect_count = 0;
+		addBonus();
 	}
 };
 
@@ -74,11 +85,11 @@ const updateMovingColumn = function() {
 	moving_column.y = tower[tower.length -1].y - column_height;
 	moving_column.color = colors[random(colors.length)];
 	moving_column.width = tower[tower.length -1].width;		
-	moving_column.dx = initial_speed + 1*(level/10);
+	moving_column.dx = initial_speed + 1*(score/10);
 };
 
 const setColumn = function() {
-	level++;
+	score++;
 	addColumnToTower();
 	updateMovingColumn();	
 	
@@ -91,16 +102,10 @@ const isGameOver = function() {
 	if(moving_column.x + moving_column.width <= tower[tower.length -1].x || 
 		moving_column.x >= tower[tower.length -1].x + tower[tower.length -1].width ) {
 		return true;
-                    }
+	}
 	return false;
 };
-	
-let gameInProgress = true;
-
-const random = function(num) {
-	return Math.floor(Math.random() * num);
-};
-					
+				
 const draw = function() {
 	//ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
 	ctx.fillStyle = "White";
@@ -108,7 +113,7 @@ const draw = function() {
 	ctx.fillStyle = "Black";
 	ctx.font = "30px Monospace";
 	ctx.fillText("SCORE", 20, 50);
-	ctx.fillText("" + level, 50, 85);
+	ctx.fillText("" + score, 50, 85);
 	for(let i = 0; i < tower.length; i++) {
 		ctx.fillStyle = tower[i].color;
 		ctx.fillRect(tower[i].x, tower[i].y, tower[i].width, tower[i].height);
@@ -118,7 +123,7 @@ const draw = function() {
 };
 
 const resetGame = function() {
-	level = 0;
+	score = 0;
 	perfect_count = 0;
 	tower.length = 0;
 	initialize_tower();
@@ -130,7 +135,7 @@ const makeMove = function() {
 		if(moving_column.x + moving_column.dx + moving_column.width > canvas.width) {
 			moving_column.dx = -moving_column.dx;
 			}      	
-				if(moving_column.x + moving_column.dx < 0) {
+		if(moving_column.x + moving_column.dx < 0) {
 			moving_column.dx = -moving_column.dx;	
   		}			
 		moving_column.x += moving_column.dx;
@@ -149,7 +154,7 @@ const makeMoveDown = function() {
 };	
 
 const build_tower = function() {
-	if(moving_down)
+	if(moving_down)  // not sure what it does but scared to remove
 	makeMoveDown();
 	draw();	
 	makeMove();
