@@ -1,7 +1,8 @@
-// canvas height constantly added?
-// score jumps up by 5
-// line 169?
+// TODO add some sick visual effects
+// ^ canvas is deleted? we may need scrolldown() before startOver()
+// so we can see how far went (works only if there is min 1 move down)
 // add money so you can buy extra stuff?
+// replace column with moving_column?
 
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
@@ -9,15 +10,14 @@ ctx.canvas.width  = window.innerWidth;
 ctx.canvas.height = window.innerHeight;
 
 const backgroundImg = new Image();
-backgroundImg.src = ""; 
+backgroundImg.src = "https://s3.envato.com/files/170596024/City_Background_Ny_4267x2133.jpg"; 
 //https://s3.envato.com/files/170596024/City_Background_Ny_4267x2133.jpg
 //https://s3.envato.com/files/162652205/City_Background_4267x2133.jpg
 
-const column_height = 50;
-const column_width = 200;
+const column_height = 50; // better set as the part of the object column.height
+const column_width = 300;
 const initial_height = 3;
 const tower_height_max = 12; // determines starting height to go up from
-// ^ canvas is deleted? we may need scrolldown() at the end
 const move_down = 1.5; // the speed of canvas scope going up
 let moving = true; 
 let moving_down = false; // if true moves down after the game starts?
@@ -51,7 +51,7 @@ const random = function(num) {
 };
 
 const addBonus = function() {
-	score += 4;
+	score += 4;  // adds more than 4 (sometimes)
 	perfect_count = 0;
 };
 
@@ -60,13 +60,15 @@ const isPerfect = function() {
 		return;
 	}
 	if (Math.abs(tower[tower.length - 1].x - tower[tower.length - 2].x) <= 10 &&
-	Math.abs(tower[tower.length - 1].width - tower[tower.length - 2].width) <=10) {
+	Math.abs(tower[tower.length - 1].width - tower[tower.length - 2].width) <= 10) {
 		perfect_count++;
 	}    
 	if (perfect_count >= 5) {
 		addBonus();
 	}
 };
+
+// need the column to start near center
 
 const addColumnToTower = function() {
 	tower.push({
@@ -80,14 +82,14 @@ const addColumnToTower = function() {
 		dy: move_down
 	});
 	isPerfect();
-}; 
+};
 
 const updateMovingColumn = function() {
-	moving_column.x = 0;
-	moving_column.y = tower[tower.length -1].y - column_height;
+	moving_column.x = 230;
+	moving_column.y = tower[tower.length - 1].y - column_height;
 	moving_column.color = colors[random(colors.length)];
-	moving_column.width = tower[tower.length -1].width;		
-	moving_column.dx = initial_speed + 1*(score/10);
+	moving_column.width = tower[tower.length - 1].width;		
+	moving_column.dx = initial_speed + 1 * (score / 10);
 };
 
 const setColumn = function() {
@@ -95,7 +97,7 @@ const setColumn = function() {
 	addColumnToTower();
 	updateMovingColumn();	
 	
-	if(tower.length >= tower_height_max ) {
+	if(tower.length >= tower_height_max) {
 		moving_down = true;							
 	}							
 };
@@ -109,9 +111,9 @@ const isGameOver = function() {
 };
 				
 const draw = function() {
-	//ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
-	ctx.fillStyle = "White";
-	ctx.fillRect(0, 0, canvas.width, canvas.height);
+	ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height); // low-performance on this pic
+	/*ctx.fillStyle = "White";
+	ctx.fillRect(0, 0, canvas.width, canvas.height);*/
 	ctx.fillStyle = "Black";
 
 	ctx.font = "30px Monospace";
@@ -142,12 +144,12 @@ const startOver = function() { // resetGame previously
 	initialize_moving_column();
 };
 	
-const makeMove = function() {
+const makeMove = function() { // removed "+ moving_column.dx"
 	if(moving) {
-		if(moving_column.x + moving_column.dx + moving_column.width > canvas.width) {
-			moving_column.dx = -moving_column.dx;
-			}      	
-		if(moving_column.x + moving_column.dx < 0) {
+		if(moving_column.x + moving_column.width > canvas.width - 230) {
+			moving_column.dx = -moving_column.dx;            // - 230 added
+		}
+		if(moving_column.x < 230) {
 			moving_column.dx = -moving_column.dx;	
   		}			
 		moving_column.x += moving_column.dx;
@@ -156,7 +158,7 @@ const makeMove = function() {
 
 const makeMoveDown = function() {
 	if(tower[0].y + tower[0].dy >= canvas.height ) {
-		tower.shift();           // dead code? not used elsewhere
+		tower.shift();         // ??? better not to lose prevous columns GOTO line 2
 		moving_down = false;
 	}
 	for(let i = 0; i < tower.length; i++) {						
@@ -167,9 +169,9 @@ const makeMoveDown = function() {
 
 const build_tower = function() {
 	if(moving_down)  // not sure what it does but scared to remove
-	makeMoveDown();
-	draw();	
-	makeMove();
+	makeMoveDown();  // cuz dat boi crashes stuff :)
+	draw();			 // who will win? hundreds of lines of code vs one little error boi
+	makeMove();		 // ok I should stop trollin' in here
 	requestAnimationFrame(build_tower);
 };
 
@@ -178,6 +180,7 @@ const initialize_tower = function() {
 		tower.push({
 			x: (canvas.width - column_width)/2,
 			y: (i === 0)?canvas.height - column_height : tower[i-1].y - column_height,
+			// wouldn't it be easier to make column.height an object
 			color: colors[random(colors.length)],
 			height: column_height,
 			width: column_width,
@@ -188,7 +191,7 @@ const initialize_tower = function() {
 
 const initialize_moving_column = function() {
 	moving_column = {
-				x: 0,
+				x: 230,
 				y: tower[tower.length - 1].y - column_height,
 				color: colors[random(colors.length)],
 				height: column_height,
