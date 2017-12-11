@@ -4,6 +4,13 @@
 // add money so you can buy extra stuff?
 // replace column with moving_column?
 
+// when back pic goes up it should smoothly transist to space
+// with a rose in the center (Al-Karmir)
+// and Tigrovvy background with some cool electric Blue with Bordoi
+// and Tatul music, and Doge be like:
+// many romantic, very luv, such xore ~
+// #վարագույր
+
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 ctx.canvas.width  = window.innerWidth;
@@ -11,13 +18,8 @@ ctx.canvas.height = window.innerHeight;
 
 const backgroundImg = new Image();
 backgroundImg.src = "cityNight.png";
-
-// when it goes up it should smoothly transist to space
-// with a rose in the center (Al-Karmir)
-// and Tigrovvy background with some cool electric Blue with Bordoi
-// and Tatul music
-// many romantic, very luv, such xore ~
-// #վարագույր
+// Sega streets of rage
+// sound https://en.wikipedia.org/wiki/Streets_of_Rage
 
 const column_height = 50; // better set as the part of the object column.height
 const column_width = 300;
@@ -27,7 +29,7 @@ const move_down = 1.5; // the speed of canvas scope going up
 let moving = true; 
 let moving_down = false; // if true moves down after the game starts?
 
-const colors = ["Red", "Green", "Blue", "Yellow"];
+const colors = ["#4CB088", "#319589", "#344D6C", "#3E1B3C", "#224732"];
 const tower = [];
 let moving_column;
 let score = 0;
@@ -116,11 +118,9 @@ const isGameOver = function() {
 };
 				
 const draw = function() {
-	ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height); // low-performance on this pic?
-	/*ctx.fillStyle = "White";
-	ctx.fillRect(0, 0, canvas.width, canvas.height);*/
-	ctx.fillStyle = "Black";
-
+	ctx.drawImage(backgroundImg, 0, 0, 1707, 960); // low-performance on this pic?
+	
+	ctx.fillStyle = "#4CB088";
 	ctx.font = "30px Monospace";
 	ctx.fillText("SCORE: " + score, 20, 50);
 	ctx.font = "24px Monospace";
@@ -165,6 +165,12 @@ const makeMoveDown = function() {
 	if(tower[0].y + tower[0].dy >= canvas.height ) {
 		tower.shift();         // ??? better not to lose prevous columns GOTO line 2
 		moving_down = false;
+
+		// ctx.canvas.height - 100;
+		/*I'm thinking of something like this to add
+		like not to go down/destroy current columns
+		but instead build on it to reach to space GOTO line 7 */
+		
 	}
 	for(let i = 0; i < tower.length; i++) {						
 		tower[i].y += tower[i].dy;
