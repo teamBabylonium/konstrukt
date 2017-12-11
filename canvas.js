@@ -1,6 +1,7 @@
 // canvas height constantly added?
 // score jumps up by 5
-// line 157?
+// line 169?
+// add money so you can buy extra stuff?
 
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
@@ -25,6 +26,7 @@ const colors = ["Red", "Green", "Blue", "Yellow"];
 const tower = [];
 let moving_column;
 let score = 0;
+let highScore = 0;
 let initial_speed = 3;
 let perfect_count = 5; // not clear
 let gameInProgress = true; // can't find it anywhere else
@@ -36,13 +38,13 @@ document.addEventListener("keydown", function(event) {
 		moving = false;
 		if(isGameOver()) {
 			alert("The Game is Over");
-			resetGame();
+			startOver();
 		} else {
 			setColumn();
 		}
 		moving = true;
 	}
-}, false); 
+}, false);
 
 const random = function(num) {
 	return Math.floor(Math.random() * num);
@@ -111,9 +113,12 @@ const draw = function() {
 	ctx.fillStyle = "White";
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
 	ctx.fillStyle = "Black";
+
 	ctx.font = "30px Monospace";
-	ctx.fillText("SCORE", 20, 50);
-	ctx.fillText("" + score, 50, 85);
+	ctx.fillText("SCORE: " + score, 20, 50);
+	ctx.font = "24px Monospace";
+	ctx.fillText("max. " + highScore, 20, 80);
+
 	for(let i = 0; i < tower.length; i++) {
 		ctx.fillStyle = tower[i].color;
 		ctx.fillRect(tower[i].x, tower[i].y, tower[i].width, tower[i].height);
@@ -122,7 +127,14 @@ const draw = function() {
 	ctx.fillRect(moving_column.x, moving_column.y, moving_column.width, moving_column.height);
 };
 
-const resetGame = function() {
+const setHighScore = function() {
+	if(highScore < score) {
+		highScore = score;
+	}
+}
+
+const startOver = function() { // resetGame previously
+	setHighScore();
 	score = 0;
 	perfect_count = 0;
 	tower.length = 0;
@@ -144,7 +156,7 @@ const makeMove = function() {
 
 const makeMoveDown = function() {
 	if(tower[0].y + tower[0].dy >= canvas.height ) {
-		tower.shift();
+		tower.shift();           // dead code? not used elsewhere
 		moving_down = false;
 	}
 	for(let i = 0; i < tower.length; i++) {						
