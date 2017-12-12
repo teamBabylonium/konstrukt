@@ -1,5 +1,5 @@
 // TODO add some sick visual effects
-// ^ canvas is deleted? we may need scrolldown() before startOver()
+// canvas is deleted? we may need scrolldown() before startOver()
 // so we can see how far went (works only if there is min 1 move down)
 // add money so you can buy extra stuff?
 // replace column with moving_column?
@@ -11,10 +11,14 @@
 // many romantic, very luv, such xore ~
 // #վարագույր
 
+// make the UI/UX feel like retro
+// for example blinking column
+// gif-like animations
+
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
-ctx.canvas.width  = window.innerWidth;
-ctx.canvas.height = window.innerHeight;
+ctx.canvas.width  = window.innerWidth; // screen.width
+ctx.canvas.height = window.innerHeight; // screen.height
 
 const backgroundImg = new Image();
 backgroundImg.src = "cityNight.png";
@@ -74,8 +78,6 @@ const isPerfect = function() {
 		addBonus();
 	}
 };
-
-// need the column to start near center
 
 const addColumnToTower = function() {
 	tower.push({
