@@ -4,7 +4,7 @@
 // add money so you can buy extra stuff?
 // replace column with moving_column?
 
-// shader stuff
+// stars stuff
 
 // when back pic goes up it should smoothly transist to space
 // with a rose in the center (Al-Karmir)
