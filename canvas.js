@@ -2,19 +2,17 @@
 // canvas is deleted? we may need scrolldown() before startOver()
 // so we can see how far went (works only if there is min 1 move down)
 // add money so you can buy extra stuff?
-// replace column with moving_column?
 
-// shader stuff
+// star stuff
 
 // when back pic goes up it should smoothly transist to space
 // with a rose in the center (Al-Karmir)
 // and Tigrovvy background with some cool electric Blue with Bordoi
 // and Tatul music, and Doge be like:
 
-// Switzerland alp
-// Japan Sakur	a
-// night city
-// server
+// Switzerland alpes
+// Japan Sakura
+// Night city
 
 // github website
 
@@ -31,7 +29,7 @@ ctx.canvas.width  = window.innerWidth; // screen.width
 ctx.canvas.height = window.innerHeight; // screen.height
 
 const backgroundImg = new Image();
-backgroundImg.src = "cityNight1.png";
+backgroundImg.src = "cityNight1.png"; //
 // Sega streets of rage
 // sound https://en.wikipedia.org/wiki/Streets_of_Rage
 // we should build a skysaper instead of blocks
@@ -52,20 +50,6 @@ let highScore = 0;
 let initial_speed = 3;
 let perfect_count = 5;
 
-const spacebar = 32;
-
-document.addEventListener("keydown", function(event) {
-	if(event.keyCode === spacebar) {
-		moving = false;
-		if(isGameOver()) {
-			alert("The Game is Over");
-			startOver();
-		} else {
-			setColumn();
-		}
-		moving = true;
-	}
-}, false);
 
 const random = function(num) {
 	return Math.floor(Math.random() * num);
@@ -80,9 +64,10 @@ const isPerfect = function() {
 	if (tower.length < 2) {
 		return;
 	}
-	if (Math.abs(tower[tower.length - 1].x - tower[tower.length - 2].x) <= 10 &&
-	Math.abs(tower[tower.length - 1].width - tower[tower.length - 2].width) <= 10) {
+	if (Math.abs(tower[tower.length - 1].x - tower[tower.length - 2].x) <= 3 &&
+	Math.abs(tower[tower.length - 1].width - tower[tower.length - 2].width) <= 3) {
 		perfect_count++;
+		alert("yo");
 	}    
 	if (perfect_count >= 5) {
 		addBonus();
@@ -130,7 +115,8 @@ const isGameOver = function() {
 };
 				
 const draw = function() {
-	ctx.drawImage(backgroundImg, 0, 0, 1707, 960);
+	ctx.drawImage(backgroundImg, 0, 0, 1707, 960); // need to make background responsive
+	// multiple canvases?
 	
 	ctx.fillStyle = "#4CB088";
 	ctx.font = "30px Monospace";
@@ -146,11 +132,18 @@ const draw = function() {
 	ctx.fillRect(column.x, column.y, column.width, column.height);
 };
 
+const saveHighScore = function() {
+	localStorage.setItem("number", "score");
+	console.log(localStorage.getItem("highScore"));
+};
+
 const setHighScore = function() { // location.reload() to stay
 	if(highScore < score) {
 		highScore = score;
+		saveHighScore();
 	}
 };
+
 
 const startOver = function() { // resetGame previously
 	setHighScore();
@@ -177,12 +170,6 @@ const makeMoveDown = function() {
 	if(tower[0].y + tower[0].dy >= canvas.height ) {
 		tower.shift();         // ??? better not to lose previous columns GOTO line 2
 		moving_down = false;
-
-		// ctx.canvas.height - 100;
-		/*I'm thinking of something like this to add
-		like not to go down/destroy current columns
-		but instead build on it to reach to space GOTO line 7 */
-		
 	}
 	for(let i = 0; i < tower.length; i++) {						
 		tower[i].y += tower[i].dy;
@@ -203,7 +190,6 @@ const initializeTower = function() {
 		tower.push({
 			x: (canvas.width - column_width)/2,
 			y: (i === 0)?canvas.height - column_height : tower[i-1].y - column_height,
-			// wouldn't it be easier to make column.height an object
 			color: colors[random(colors.length)],
 			height: column_height,
 			width: column_width,
@@ -223,6 +209,34 @@ const initializeColumn = function() {
 			dy: move_down_speed
 		};
 };
+
+const spacebar = 32;
+
+document.addEventListener("keydown", function(event) {
+	if(event.keyCode === spacebar) {
+		moving = false;
+		if(isGameOver()) {
+			alert("Game over!");
+			startOver();
+		} else {
+			setColumn();
+		}
+		moving = true;
+	}
+}, false);
+
+document.addEventListener("touchstart", function(event) { // for touch events
+	if(event.target == canvas) {
+		moving = false;
+		if(isGameOver()) {
+			alert("Game over!");
+			startOver();
+		} else {
+			setColumn();
+		}
+		moving = true;
+	}
+}, false);
 
 const startGame = function() {
 	initializeTower();
