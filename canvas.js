@@ -221,3 +221,6 @@ const start_game = function() {
 };
 
 start_game(); 
+// Yeyyyyyy.
+// Hayko Toweri blockner@ sarqi.
+// please
