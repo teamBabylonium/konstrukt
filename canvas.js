@@ -4,7 +4,7 @@
 // add money so you can buy extra stuff?
 // replace column with moving_column?
 
-// stars stuff
+// shader stuff
 
 // when back pic goes up it should smoothly transist to space
 // with a rose in the center (Al-Karmir)
@@ -12,7 +12,7 @@
 // and Tatul music, and Doge be like:
 
 // Switzerland alp
-// Japan Sakura
+// Japan Sakur	a
 // night city
 // server
 
@@ -108,7 +108,7 @@ const updateMovingColumn = function() {
 	column.y = tower[tower.length - 1].y - column_height;
 	column.color = colors[random(colors.length)];
 	column.width = tower[tower.length - 1].width;		
-	column.dx = initSpeed + 1.5 * (score / 10); // change
+	column.dx = initial_speed + 1.5 * (score / 10); // change
 };
 
 const setColumn = function() {
@@ -150,7 +150,7 @@ const setHighScore = function() { // location.reload() to stay
 	if(highScore < score) {
 		highScore = score;
 	}
-}
+};
 
 const startOver = function() { // resetGame previously
 	setHighScore();
@@ -212,7 +212,7 @@ const initializeTower = function() {
 	}
 };
 
-const initializeMovingColumn = function() {
+const initializeColumn = function() {
 	column = {
 			x: 350,
 			y: tower[tower.length - 1].y - column_height,
@@ -226,7 +226,7 @@ const initializeMovingColumn = function() {
 
 const startGame = function() {
 	initializeTower();
-	initializeMovingColumn();
+	initializeColumn();
 	buildTower();
 };
 
