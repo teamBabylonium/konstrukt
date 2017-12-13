@@ -29,7 +29,7 @@ ctx.canvas.width  = window.innerWidth; // screen.width
 ctx.canvas.height = window.innerHeight; // screen.height
 
 const backgroundImg = new Image();
-backgroundImg.src = "cityNight1.png"; //
+backgroundImg.src = "cityNight.png"; //
 // Sega streets of rage
 // sound https://en.wikipedia.org/wiki/Streets_of_Rage
 // we should build a skysaper instead of blocks
@@ -48,8 +48,7 @@ let column;
 let score = 0;
 let highScore = 0;
 let initial_speed = 3;
-let perfect_count = 5;
-
+let perfect_count = 5;  // 5
 
 const random = function(num) {
 	return Math.floor(Math.random() * num);
@@ -61,7 +60,7 @@ const addBonus = function() {
 };
 
 const isPerfect = function() {
-	if (tower.length < 2) {
+	if (tower.length === initial_height) {
 		return;
 	}
 	if (Math.abs(tower[tower.length - 1].x - tower[tower.length - 2].x) <= 3 &&
@@ -131,20 +130,22 @@ const draw = function() {
 	ctx.fillRect(column.x, column.y, column.width, column.height);
 };
 
-const saveHighScore = function() {
-	localStorage.setItem("number", "score");
-	console.log(localStorage.getItem("highScore"));
+const loadHighScore = function() {
+	highScore = localStorage.getItem("highScore");
 };
 
-const setHighScore = function() { // location.reload() to stay
+const saveHighScore = function() {
+	localStorage.setItem("highScore", JSON.stringify(score));
+};
+
+const setHighScore = function() {
 	if(highScore < score) {
 		highScore = score;
 		saveHighScore();
 	}
 };
 
-
-const startOver = function() { // resetGame previously
+const startOver = function() {
 	setHighScore();
 	score = 0;
 	perfect_count = 0;
@@ -177,10 +178,10 @@ const makeMoveDown = function() {
 };	
 
 const buildTower = function() {
-	if(moving_down)  // not sure what it does but scared to remove
-	makeMoveDown();  // cuz dat boi crashes stuff :)
-	draw();			 // who will win? hundreds of lines of code vs one little error boi
-	makeMove();		 // ok I should stop trollin' in here
+	if(moving_down)
+	makeMoveDown();
+	draw();
+	makeMove();
 	requestAnimationFrame(buildTower);
 };
 
@@ -238,6 +239,7 @@ document.addEventListener("touchstart", function(event) { // for touch events
 }, false);
 
 const startGame = function() {
+	loadHighScore();
 	initializeTower();
 	initializeColumn();
 	buildTower();
