@@ -12,7 +12,7 @@
 
 // Switzerland alpes
 // Japan Sakura
-// Night city
+// Night city - moon
 
 // github website
 
@@ -23,21 +23,15 @@
 // for example blinking column
 // gif-like animations
 
-const canvas = document.querySelector("canvas");
+const canvas = document.querySelector("canvas"); // select by id
 const ctx = canvas.getContext("2d");
-ctx.canvas.width  = window.innerWidth; // screen.width
-ctx.canvas.height = window.innerHeight; // screen.height
-
-const backgroundImg = new Image();
-backgroundImg.src = "cityNight.png"; //
-// Sega streets of rage
-// sound https://en.wikipedia.org/wiki/Streets_of_Rage
-// we should build a skysaper instead of blocks
+ctx.canvas.width  = window.innerWidth; // better write css
+ctx.canvas.height = window.innerHeight;
 
 const column_height = 50;
 const column_width = 300;
 const initial_height = 3;
-const tower_height_max = 12 ; // determines starting height to go up from
+const tower_height_max = 5; // determines starting height to go up from
 const move_down_speed = 1.5; // the speed of canvas scope going up
 let moving = true; 
 let moving_down = false;
@@ -46,29 +40,31 @@ const colors = ["#9F5F20", "#004969", "#008080", "#3E1B3C", "#224732"];
 const tower = [];
 let column;
 let score = 0;
+let scoreWithoutBonus = score;
 let highScore = 0;
 let initial_speed = 3;
-let perfect_count = 5;  // 5
+let perfect_count = 0;
 
 const random = function(num) {
 	return Math.floor(Math.random() * num);
 };
 
 const addBonus = function() {
-	score += 4;  // adds 5 bonus should let the user know
+	score += 4;  // adds 4 bonus + 1 point
 	perfect_count = 0;
 };
 
-const isPerfect = function() {
+const isPerfect = function() {   /// should have antother perfect without _count
 	if (tower.length === initial_height) {
 		return;
 	}
-	if (Math.abs(tower[tower.length - 1].x - tower[tower.length - 2].x) <= 3 &&
-	Math.abs(tower[tower.length - 1].width - tower[tower.length - 2].width) <= 3) {
+	if (Math.abs(tower[tower.length - 1].x - tower[tower.length - 2].x) <= 6 &&
+	Math.abs(tower[tower.length - 1].width - tower[tower.length - 2].width) <= 6) {
 		perfect_count++;
 	}
 	if (perfect_count >= 5) {
 		addBonus();
+		scoreWithoutBonus = score - 5; // needed for proper acceleration
 	}
 };
 
@@ -86,26 +82,27 @@ const addColumnToTower = function() {
 	isPerfect();
 };
 
-const updateMovingColumn = function() {
+const newColumn = function() {
 	column.x = 350;
 	column.y = tower[tower.length - 1].y - column_height;
 	column.color = colors[random(colors.length)];
 	column.width = tower[tower.length - 1].width;		
-	column.dx = initial_speed + 1.5 * (score / 10); // change
-};
+	column.dx = initial_speed + 1.5 * (scoreWithoutBonus / 10); // removed (score / 10);
+};																// cuz bonus shouldn't accelerate
 
 const setColumn = function() {
 	score++;
+	scoreWithoutBonus++;
 	addColumnToTower();
-	updateMovingColumn();	
+	newColumn();	
 	
-	if(tower.length >= tower_height_max) {
+	if (tower.length >= tower_height_max) {
 		moving_down = true;							
 	}							
 };
 
 const isGameOver = function() {
-	if(column.x + column.width <= tower[tower.length -1].x || 
+	if (column.x + column.width <= tower[tower.length -1].x || 
 		column.x >= tower[tower.length -1].x + tower[tower.length -1].width ) {
 		return true;
 	}
@@ -113,16 +110,15 @@ const isGameOver = function() {
 };
 				
 const draw = function() {
-	ctx.drawImage(backgroundImg, 0, 0, 1707, 960); // need to make background responsive
-	// multiple canvases?
-	
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+
 	ctx.fillStyle = "#4CB088";
 	ctx.font = "30px Monospace";
 	ctx.fillText("SCORE: " + score, 20, 50);
 	ctx.font = "24px Monospace";
 	ctx.fillText("max. " + highScore, 20, 80);
 
-	for(let i = 0; i < tower.length; i++) {
+	for (let i = 0; i < tower.length; i++) {
 		ctx.fillStyle = tower[i].color;
 		ctx.fillRect(tower[i].x, tower[i].y, tower[i].width, tower[i].height);
 	}
@@ -139,27 +135,31 @@ const saveHighScore = function() {
 };
 
 const setHighScore = function() {
-	if(highScore < score) {
+	if (highScore < score) {
 		highScore = score;
 		saveHighScore();
 	}
 };
 
 const startOver = function() {
-	setHighScore();
-	score = 0;
-	perfect_count = 0;
-	tower.length = 0;
-	initializeTower();
-	initializeColumn();
-};
+		setHighScore();
+		score = 0;
+		perfect_count = 0;
+		tower.length = 0;
+		initializeTower();
+		initializeColumn();
+	};
+
+document.addEventListener('DOMContentLoaded', function() {
+	// intro scene?
+}, false);
 	
-const makeMove = function() { // removed "+ moving_column.dx"
-	if(moving) {
-		if(column.x + column.width > canvas.width - 350) {
+const collision = function() { // removed "+ moving_column.dx"
+	if (moving) {
+		if (column.x + column.width > canvas.width - 350) {
 			column.dx = -column.dx;
 		}
-		if(column.x < 350) {
+		if (column.x < 350) {
 			column.dx = -column.dx;	
   		}			
 		column.x += column.dx;
@@ -167,26 +167,26 @@ const makeMove = function() { // removed "+ moving_column.dx"
 };
 
 const makeMoveDown = function() {
-	if(tower[0].y + tower[0].dy >= canvas.height ) {
-		tower.shift();         // ??? better not to lose previous columns GOTO line 2
+	if (tower[0].y + tower[0].dy >= canvas.height ) {
+		tower.shift();
 		moving_down = false;
 	}
-	for(let i = 0; i < tower.length; i++) {						
+	for (let i = 0; i < tower.length; i++) {						
 		tower[i].y += tower[i].dy;
 	}
 	column.y += column.dy;			
 };	
 
 const buildTower = function() {
-	if(moving_down)
+	if (moving_down)
 	makeMoveDown();
 	draw();
-	makeMove();
+	collision();
 	requestAnimationFrame(buildTower);
 };
 
 const initializeTower = function() {
-	for(let i = 0; i < initial_height; i++) {
+	for (let i = 0; i < initial_height; i++) {
 		tower.push({
 			x: (canvas.width - column_width)/2,
 			y: (i === 0)?canvas.height - column_height : tower[i-1].y - column_height,
@@ -213,9 +213,9 @@ const initializeColumn = function() {
 const spacebar = 32;
 
 document.addEventListener("keydown", function(event) {
-	if(event.keyCode === spacebar) {
+	if (event.keyCode === spacebar) {
 		moving = false;
-		if(isGameOver()) {
+		if (isGameOver()) {
 			alert("Game over!");
 			startOver();
 		} else {
@@ -226,9 +226,9 @@ document.addEventListener("keydown", function(event) {
 }, false);
 
 document.addEventListener("touchstart", function(event) { // for touch events
-	if(event.target == canvas) {
+	if (event.target === canvas) {
 		moving = false;
-		if(isGameOver()) {
+		if (isGameOver()) {
 			alert("Game over!");
 			startOver();
 		} else {
