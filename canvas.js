@@ -67,8 +67,7 @@ const isPerfect = function() {
 	if (Math.abs(tower[tower.length - 1].x - tower[tower.length - 2].x) <= 3 &&
 	Math.abs(tower[tower.length - 1].width - tower[tower.length - 2].width) <= 3) {
 		perfect_count++;
-		alert("yo");
-	}    
+	}
 	if (perfect_count >= 5) {
 		addBonus();
 	}
