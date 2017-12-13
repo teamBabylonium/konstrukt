@@ -4,8 +4,11 @@
 	<meta charset="UTF-8">
 	<title>towerGame</title>
 	<style>
-		canvas {
+		#background {
 			border: 1px solid black;
+		}
+		#foreground {
+    		border: 1px solid black;
 		}
 		html, body {
 			overflow: hidden;
@@ -15,8 +18,8 @@
 	</style>
 </head>
 <body>
-	<canvas></canvas>
-	</canvas>
+	<canvas id="background" style="z-index: 1;"></canvas>
+	<canvas id="foreground" style="z-index: 2;"></canvas>
 	<script src="canvas.js"></script> 
 </body>
 </html>
