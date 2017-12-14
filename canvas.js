@@ -5,7 +5,8 @@ const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 canvas.width  = 1707; // plans to make responsive
 canvas.height = 960;
-document.body.style.zoom = "90%" // make 90% zoom by default
+document.body.style.zoom = "90%"; // make 90% zoom by default
+// may add fullscreen
 
 const column_height = 50;
 const column_width = 300;
@@ -97,27 +98,65 @@ const isGameOver = function() {
 	// outro scene
 };
 
-const background = new Image();
-background.src = "pictures/city.png";	
+/*const background = new Image();
+background.src = "pictures/city.jpg"; // add pic*/
 
-const introImg = new Image();
-introImg.src = "pictures/sticker.jpg"
+const plane = new Image();
+plane.src = "pictures/plane.png";
+plane_dx = -1;
+plane_x = 1350;
+
+const intro0 = new Image();
+intro0.src = "pictures/intro0.jpg";
+const draw0 = function() {
+	ctx.drawImage(intro0, 0, 0, 0, canvas.width, canvas.height);
+};
+
+const intro1 = new Image();
+intro1.src = "pictures/intro1.jpg";
+const draw1 = function() {
+	ctx.drawImage(intro1, 0, 0, canvas.width, canvas.height);
+};
+
+const intro2 = new Image();
+intro2.src = "pictures/intro2.jpg";
+const draw2 = function() {
+	ctx.drawImage(intro2, 0, 0, canvas.width, canvas.height);
+};
+
+const intro3 = new Image();
+intro3.src = "pictures/intro3.jpg";
+const draw3 = function() {
+	ctx.drawImage(intro3, 0, 0, canvas.width, canvas.height);
+}; // didn't have enough time to create a loop
 
 let introInProgress = false;
+let stopShowIntro;
 
-const showIntro = function() { // call this function to show intro
-	introInProgress = true;
-	ctx.drawImage(introImg, 0, 0, canvas.width, canvas.height);
+const showIntro = function() {
+	if (stopShowIntro) {
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		return;
+	} else if (introInProgress) {
+		setTimeout(draw0, 0);
+		setTimeout(draw1, 500);
+		setTimeout(draw3, 1000);
+		setTimeout(draw2, 1500);
+	}
 };
 
 const hideIntro = function() {
 	introInProgress = false;
+	stopShowIntro = true; // to avoid bugs
 };
 				
 const draw = function() {
 	if (!introInProgress) {
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
-			/*ctx.drawImage(background, 0, 0, canvas.width, canvas.height); // resize*/
+		/*ctx.drawImage(background, 0, 0, canvas.width, canvas.height); // resize*/
+
+		ctx.drawImage(plane, plane_x, 600, 80, 50);
+		plane_x += plane_dx;
 
 		ctx.fillStyle = "#4CB088";
 		ctx.font = "28px Lucida console";
@@ -135,8 +174,7 @@ const draw = function() {
 };
 
 const loadHighScore = function() {
-	highScore = localStorage.getItem("highScore");
-	// localStorage.clear();
+	highScore = localStorage.getItem("highScore"); // localStorage.clear();
 };
 
 const saveHighScore = function() {
@@ -216,8 +254,8 @@ const initializeColumn = function() {
 };
 
 const spacebar = 32;
-const i = 73;
-const o = 79;
+const i = 73; // open intro
+const o = 79; // close intro
 
 document.addEventListener("keydown", function(event) {
 	if (event.keyCode === spacebar) {
@@ -230,13 +268,18 @@ document.addEventListener("keydown", function(event) {
 		}
 		moving = true;
 	} if (event.keyCode === i) {
+		introInProgress = true;
+		stopShowIntro = false;
 		showIntro();
+		setInterval(showIntro, 1600); // #bug after some i, o's the speed accelerates
+		let interval = setInterval(showIntro, 1600);
 	} if (event.keyCode === o) {
 		hideIntro();
+		clearInterval(interval);
 	}
 }, false);
 
-/*document.addEventListener("touchstart", function(event) { // for touch events
+/*document.addEventListener("touchstart", function(event) { // for touch events (incomplete)
 	if (event.target === canvas) {
 		moving = false;
 		if (isGameOver()) {
