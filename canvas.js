@@ -1,7 +1,10 @@
+// TODO
+// add music (find the link on old commits) (wiki)
+
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 canvas.width  = window.innerWidth;
-canvas.height = 1000;
+canvas.height = window.innerHeight;
 
 const column_height = 50;
 const column_width = 300;
@@ -19,6 +22,13 @@ let scoreWithoutBonus = score;
 let highScore = 0;
 let initial_speed = 3;
 let perfect_count = 0;
+
+const playAudio = function() {
+	song = new Audio("sounds/song.mp3");
+	song.loop = true;
+	song.volume = .02;
+	song.play();
+}; 
 
 const random = function(num) {
 	return Math.floor(Math.random() * num);
@@ -82,40 +92,45 @@ const isGameOver = function() {
 		return true;
 	}
 	return false;
+
+	// outro scene
 };
 
 const background = new Image();
-background.src = "pictures/background.png";
-const city1 = new Image();
-city1.src = "pictures/city1.png";
-/*const city2 = new Image();
-city2.src = "pictures/city2.png";
-const city3 = new Image();
-city3.src = "pictures/city3.png";
-const city4 = new Image();
-city4.src = "pictures/city4.png";
-const city5 = new Image();
-city5.src = "pictures/city5.png";
-const city6 = new Image();
-city6.src = "pictures/city6.png";*/
+background.src = "pictures/city.png";	
+
+const introImg = new Image();
+introImg.src = "pictures/sticker.jpg"
+
+let introInProgress = false;
+
+const showIntro = function() { // call this function to show intro
+	introInProgress = true;
+	ctx.drawImage(introImg, 0, 0, canvas.width, canvas.height);
+};
+
+const hideIntro = function() {
+	introInProgress = false;
+};
 				
 const draw = function() {
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	ctx.drawImage(background, 0, 0, canvas.width, 5000);
-	ctx.drawImage(city1, 0, 0, canvas.width, canvas.height);
+	if (!introInProgress) {
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+			/*ctx.drawImage(background, 0, 0, canvas.width, canvas.height); // resize*/
 
-	ctx.fillStyle = "#4CB088";
-	ctx.font = "28px Lucida console";
-	ctx.fillText("Score: " + score, 20, 50); // needs to be visible
-	ctx.font = "25px Lucida console";
-	ctx.fillText("max. " + highScore, 20, 80);
+		ctx.fillStyle = "#4CB088";
+		ctx.font = "28px Lucida console";
+		ctx.fillText("SCORE: " + score, 20, 50); // needs to be visible
+		ctx.font = "25px Lucida console";
+		ctx.fillText("max. " + highScore, 20, 80);
 
-	for (let i = 0; i < tower.length; i++) {
+		for (let i = 0; i < tower.length; i++) {
 		ctx.fillStyle = tower[i].color;
 		ctx.fillRect(tower[i].x, tower[i].y, tower[i].width, tower[i].height);
+		}
+		ctx.fillStyle = column.color;
+		ctx.fillRect(column.x, column.y, column.width, column.height);
 	}
-	ctx.fillStyle = column.color;
-	ctx.fillRect(column.x, column.y, column.width, column.height);
 };
 
 const loadHighScore = function() {
@@ -142,10 +157,6 @@ const startOver = function() {
 		initializeTower();
 		initializeColumn();
 	};
-
-document.addEventListener('DOMContentLoaded', function() {
-	// intro scene?
-}, false);
 	
 const collision = function() { // removed "+ moving_column.dx"
 	if (moving) {
@@ -204,6 +215,8 @@ const initializeColumn = function() {
 };
 
 const spacebar = 32;
+const i = 73;
+const o = 79;
 
 document.addEventListener("keydown", function(event) {
 	if (event.keyCode === spacebar) {
@@ -215,10 +228,14 @@ document.addEventListener("keydown", function(event) {
 			setColumn();
 		}
 		moving = true;
+	} if (event.keyCode === i) {
+		showIntro();
+	} if (event.keyCode === o) {
+		hideIntro();
 	}
 }, false);
 
-document.addEventListener("touchstart", function(event) { // for touch events
+/*document.addEventListener("touchstart", function(event) { // for touch events
 	if (event.target === canvas) {
 		moving = false;
 		if (isGameOver()) {
@@ -229,10 +246,11 @@ document.addEventListener("touchstart", function(event) { // for touch events
 		}
 		moving = true;
 	}
-}, false);
+}, false);*/
 
 const startGame = function() {
 	loadHighScore();
+	playAudio();
 	initializeTower();
 	initializeColumn();
 	buildTower();
