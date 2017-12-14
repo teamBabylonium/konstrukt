@@ -1,25 +1,7 @@
-// TODO add some sick visual effects
-// canvas is deleted? we may need scrolldown() before startOver()
-// so we can see how far went (works only if there is min 1 move down)
-// add money so you can buy extra stuff?
-
-// Switzerland alpes
-// Japan Sakura
-// Night city - moon
-
-// github website
-
-// many romantic, very luv, such xore ~
-// #վարագույր
-
-// make the UI/UX feel like retro
-// for example blinking column
-// gif-like animations
-
-const canvas = document.querySelector("canvas"); // select by id
+const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 canvas.width  = window.innerWidth;
-canvas.height = window.innerHeight;
+canvas.height = 1000;
 
 const column_height = 50;
 const column_width = 300;
@@ -37,9 +19,6 @@ let scoreWithoutBonus = score;
 let highScore = 0;
 let initial_speed = 3;
 let perfect_count = 0;
-
-const backgroundImg = new Image();
-backgroundImg.src = "pics/city1.png";
 
 const random = function(num) {
 	return Math.floor(Math.random() * num);
@@ -104,14 +83,30 @@ const isGameOver = function() {
 	}
 	return false;
 };
+
+const background = new Image();
+background.src = "pictures/background.png";
+const city1 = new Image();
+city1.src = "pictures/city1.png";
+/*const city2 = new Image();
+city2.src = "pictures/city2.png";
+const city3 = new Image();
+city3.src = "pictures/city3.png";
+const city4 = new Image();
+city4.src = "pictures/city4.png";
+const city5 = new Image();
+city5.src = "pictures/city5.png";
+const city6 = new Image();
+city6.src = "pictures/city6.png";*/
 				
 const draw = function() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	ctx.drawImage(background, 0, 0, canvas.width, 5000);
+	ctx.drawImage(city1, 0, 0, canvas.width, canvas.height);
 
-	ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
 	ctx.fillStyle = "#4CB088";
-	ctx.font = "30px Lucida console";
-	ctx.fillText("Score: " + score, 20, 50);
+	ctx.font = "28px Lucida console";
+	ctx.fillText("Score: " + score, 20, 50); // needs to be visible
 	ctx.font = "25px Lucida console";
 	ctx.fillText("max. " + highScore, 20, 80);
 
