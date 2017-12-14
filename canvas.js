@@ -3,13 +3,6 @@
 // so we can see how far went (works only if there is min 1 move down)
 // add money so you can buy extra stuff?
 
-// star stuff
-
-// when back pic goes up it should smoothly transist to space
-// with a rose in the center (Al-Karmir)
-// and Tigrovvy background with some cool electric Blue with Bordoi
-// and Tatul music, and Doge be like:
-
 // Switzerland alpes
 // Japan Sakura
 // Night city - moon
@@ -31,12 +24,12 @@ canvas.height = window.innerHeight;
 const column_height = 50;
 const column_width = 300;
 const initial_height = 3;
-const tower_height_max = 5; // determines starting height to go up from
+const tower_height_max = 8; // determines starting height to go up from
 const move_down_speed = 1.5; // the speed of canvas scope going up
 let moving = true; 
 let moving_down = false;
 
-const colors = ["#9F5F20", "#004969", "#008080", "#3E1B3C", "#224732"];
+const colors = ["#9F5F20", "#004969", "#008080", "#3E1B3C", "#224732"]; // add columns
 const tower = [];
 let column;
 let score = 0;
@@ -46,7 +39,7 @@ let initial_speed = 3;
 let perfect_count = 0;
 
 const backgroundImg = new Image();
-backgroundImg.src = "cityNight.png";
+backgroundImg.src = "pics/city1.png";
 
 const random = function(num) {
 	return Math.floor(Math.random() * num);
@@ -91,7 +84,7 @@ const newColumn = function() {
 	column.color = colors[random(colors.length)];
 	column.width = tower[tower.length - 1].width;		
 	column.dx = initial_speed + 1.5 * (scoreWithoutBonus / 10); // removed (score / 10);
-};																// cuz bonus shouldn't accelerate
+};
 
 const setColumn = function() {
 	score++;
@@ -115,7 +108,7 @@ const isGameOver = function() {
 const draw = function() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-	ctx.drawImage(backgroundImg, 0, 0, 1707, 960);
+	ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
 	ctx.fillStyle = "#4CB088";
 	ctx.font = "30px Lucida console";
 	ctx.fillText("Score: " + score, 20, 50);
@@ -180,7 +173,7 @@ const makeMoveDown = function() {
 		tower[i].y += tower[i].dy;
 	}
 	column.y += column.dy;			
-};	
+};		
 
 const buildTower = function() {
 	if (moving_down)
