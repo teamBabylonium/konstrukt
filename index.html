@@ -2,13 +2,13 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>konstrukt</title>
+	<title>towerGame</title>
+	<link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
 	<style>
-		#background {
+		canvas {
 			border: 1px solid black;
-		}
-		#foreground {
-    		border: 1px solid black;
+			position: fixed;
+			image-rendering: pixelated;
 		}
 		html, body {
 			overflow: hidden;
@@ -18,8 +18,8 @@
 	</style>
 </head>
 <body>
-	<canvas id="background" style="z-index: 1;"></canvas>
-	<canvas id="foreground" style="z-index: 2;"></canvas>
+	<canvas></canvas>
+	</canvas>
 	<script src="canvas.js"></script> 
 </body>
 </html>
