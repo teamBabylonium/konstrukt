@@ -25,8 +25,8 @@
 
 const canvas = document.querySelector("canvas"); // select by id
 const ctx = canvas.getContext("2d");
-ctx.canvas.width  = window.innerWidth; // better write css
-ctx.canvas.height = window.innerHeight;
+canvas.width  = window.innerWidth;
+canvas.height = window.innerHeight;
 
 const column_height = 50;
 const column_width = 300;
@@ -44,6 +44,9 @@ let scoreWithoutBonus = score;
 let highScore = 0;
 let initial_speed = 3;
 let perfect_count = 0;
+
+const backgroundImg = new Image();
+backgroundImg.src = "cityNight.png";
 
 const random = function(num) {
 	return Math.floor(Math.random() * num);
@@ -112,10 +115,11 @@ const isGameOver = function() {
 const draw = function() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+	ctx.drawImage(backgroundImg, 0, 0, 1707, 960);
 	ctx.fillStyle = "#4CB088";
-	ctx.font = "30px Monospace";
-	ctx.fillText("SCORE: " + score, 20, 50);
-	ctx.font = "24px Monospace";
+	ctx.font = "30px Lucida console";
+	ctx.fillText("Score: " + score, 20, 50);
+	ctx.font = "25px Lucida console";
 	ctx.fillText("max. " + highScore, 20, 80);
 
 	for (let i = 0; i < tower.length; i++) {
@@ -128,6 +132,7 @@ const draw = function() {
 
 const loadHighScore = function() {
 	highScore = localStorage.getItem("highScore");
+	// localStorage.clear();
 };
 
 const saveHighScore = function() {
@@ -144,7 +149,7 @@ const setHighScore = function() {
 const startOver = function() {
 		setHighScore();
 		score = 0;
-		perfect_count = 0;
+		perfectfect_count = 0;
 		tower.length = 0;
 		initializeTower();
 		initializeColumn();
