@@ -1,10 +1,11 @@
 // TODO
-// add music (find the link on old commits) (wiki)
+// FINALIZZZEEEE!
 
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
-canvas.width  = window.innerWidth;
-canvas.height = window.innerHeight;
+canvas.width  = 1707; // plans to make responsive
+canvas.height = 960;
+document.body.style.zoom = "90%" // make 90% zoom by default
 
 const column_height = 50;
 const column_width = 300;
