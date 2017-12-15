@@ -151,6 +151,7 @@ const draw = function() {
 	if (!introInProgress) {
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+		ctx.drawImage(columnImg, 910, 800, 300, 175);
 
 		ctx.fillStyle = "#00C5FD";
 		ctx.font = "28px Lucida console";
@@ -159,8 +160,8 @@ const draw = function() {
 		ctx.fillText("max. " + highScore, 20, 80);
 
 		for (let i = 0; i < tower.length; i++) {
-		ctx.fillStyle = tower[i].color;
-		ctx.fillRect(tower[i].x, tower[i].y, tower[i].width, tower[i].height);
+			ctx.fillStyle = tower[i].color;
+			ctx.fillRect(tower[i].x, tower[i].y, tower[i].width, tower[i].height);
 		}
 		ctx.fillStyle = column.color;
 		ctx.fillRect(column.x, column.y, column.width, column.height);
