@@ -39,6 +39,11 @@ const addBonus = function() {
 	perfect_count = 0;
 };
 
+/*const scrollUp = function() {
+	window.scrollBy(0, -100);
+	setTimeout("scrollUp();", 100);
+};*/
+
 const isPerfect = function() {   /// should have antother perfect without _count
 	if (tower.length === initial_height) {
 		return;
@@ -98,32 +103,32 @@ columnImg.src = "pictures/columns/column.png";
 const introImg0 = new Image();
 introImg0.src = "pictures/intro0.jpg";
 const draw0 = function() {
-	ctx.drawImage(introImg0, 0, 0, canvas.width, canvas.height);
+	ctx.drawImage(introImg0, 0, 1000, canvas.width, canvas.height - 1000);
 };
 
 const introImg1 = new Image();
 introImg1.src = "pictures/intro1.jpg";
 const draw1 = function() {
-	ctx.drawImage(introImg1, 0, 0, canvas.width, canvas.height);
+	ctx.drawImage(introImg1, 0, 1000, canvas.width, canvas.height - 1000);
 };
 
 const introImg2 = new Image();
 introImg2.src = "pictures/intro2.jpg";
 const draw2 = function() {
-	ctx.drawImage(introImg2, 0, 0, canvas.width, canvas.height);
+	ctx.drawImage(introImg2, 0, 1000, canvas.width, canvas.height - 1000);
 };
 
 const introImg3 = new Image();
 introImg3.src = "pictures/intro3.jpg";
 const draw3 = function() {
-	ctx.drawImage(introImg3, 0, 0, canvas.width, canvas.height);
+	ctx.drawImage(introImg3, 0, 1000, canvas.width, canvas.height - 1000);
 }; // didn't have enough time to create a loop
 
 let introInProgress = false;
-let stopShowIntro;
+let stopIntro;
 
 const showIntro = function() {
-	if (stopShowIntro) {
+	if (stopIntro) {
 		return;
 	} else if (introInProgress) {
 		setTimeout(draw0, 0);
@@ -135,7 +140,7 @@ const showIntro = function() {
 
 const hideIntro = function() {
 	introInProgress = false;
-	stopShowIntro = true; // to avoid bugs
+	stopIntro = true; // to avoid bugs
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 };
 				
@@ -251,7 +256,7 @@ document.addEventListener("keydown", function(event) {
 		moving = true;
 	} if (event.keyCode === i) {
 		introInProgress = true;
-		stopShowIntro = false;
+		stopIntro = false;
 		showIntro();
 		setInterval(showIntro, 1600); // #bug after some i, o's the speed accelerates
 		let interval = setInterval(showIntro, 1600);
