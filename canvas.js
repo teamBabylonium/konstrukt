@@ -95,15 +95,13 @@ const isGameOver = function() {
 		return true;
 	}
 	return false;
-
-	// outro scene
 };
 
 const background = new Image();
 background.src = "pictures/background.jpg";
 
-const plane = new Image();
-plane.src = "pictures/plane.png"
+const columnImg = new Image();
+columnImg.src = "pictures/columns/column.png";
 
 const introImg0 = new Image();
 introImg0.src = "pictures/intro0.jpg";
@@ -132,8 +130,6 @@ const draw3 = function() {
 let introInProgress = false;
 let stopShowIntro;
 
-let timeout;
-
 const showIntro = function() {
 	if (stopShowIntro) {
 		return;
@@ -154,9 +150,9 @@ const hideIntro = function() {
 const draw = function() {
 	if (!introInProgress) {
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
-			ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+		ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
-		ctx.fillStyle = "#4CB088";
+		ctx.fillStyle = "#00C5FD";
 		ctx.font = "28px Lucida console";
 		ctx.fillText("SCORE: " + score, 20, 50); // needs to be visible
 		ctx.font = "25px Lucida console";
@@ -171,8 +167,9 @@ const draw = function() {
 	}
 };
 
+
 const loadHighScore = function() {
-	highScore = localStorage.getItem("highScore"); // localStorage.clear();
+	highScore = localStorage.getItem("highScore");
 };
 
 const saveHighScore = function() {
@@ -184,6 +181,10 @@ const setHighScore = function() {
 		highScore = score;
 		saveHighScore();
 	}
+};
+
+const clearHighScore = function() {
+	localStorage.clear(); // intended console use
 };
 
 const startOver = function() {
