@@ -9,12 +9,14 @@ canvas.height = 1921;
 document.body.style.zoom = "90%"; // make 90% zoom by default
 // fullscreen
 
+const columnImg = new Image();
+columnImg.src = "pictures/columns/column.png";
+
 const column_height = 50;
 const column_width = 200;
 const initial_height = 3;
 let moving = true; 
 
-const colors = ["#9F5F20", "#004969", "#008080", "#3E1B3C", "#224732"]; // add columns
 const tower = [];
 let column;
 let score = 0;
@@ -62,7 +64,7 @@ const addColumnToTower = function() {
 	tower.push({
 		x: (column.x <= tower[tower.length -1].x)? tower[tower.length -1].x : column.x,
 		y: tower[tower.length -1].y - column_height,
-		color: column.color,
+		image: columnImg,
 		height: column_height,
 		width: (column.x <= tower[tower.length -1].x)?
 				column.x + column.width - tower[tower.length -1].x :
@@ -74,7 +76,7 @@ const addColumnToTower = function() {
 const newColumn = function() {
 	column.x = 350;
 	column.y = tower[tower.length - 1].y - column_height;
-	column.color = colors[random(colors.length)];
+	column.image = columnImg // random new image
 	column.width = tower[tower.length - 1].width;		
 	column.dx = initial_speed + 1.5 * (scoreWithoutBonus / 10); // removed (score / 10);
 };
@@ -96,9 +98,6 @@ const isGameOver = function() {
 
 const background = new Image();
 background.src = "pictures/background.jpg";
-
-const columnImg = new Image();
-columnImg.src = "pictures/columns/column.png";
 
 const introImg0 = new Image();
 introImg0.src = "pictures/intro0.jpg";
@@ -147,13 +146,7 @@ const hideIntro = function() {
 const draw = function() {
 	if (!introInProgress) {
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
-		ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-		/*ctx.drawImage(columnImg, 910, 800, 300, 175);*/
-
-		/*let image = ctx.createPattern(columnImg,"no-repeat");
-		ctx.rect(20, 0, 300, 125);
-		ctx.fillStyle = image;
-		ctx.fill();*/
+		ctx.drawImage(background, 0, 0, canvas.width, canvas.height); // not working properly
 
 		ctx.fillStyle = "#00C5FD";
 		ctx.font = "28px Lucida console";
@@ -162,11 +155,9 @@ const draw = function() {
 		ctx.fillText("max. " + highScore, 20, 80);
 
 		for (let i = 0; i < tower.length; i++) {
-			ctx.fillStyle = tower[i].color;
-			ctx.fillRect(tower[i].x, tower[i].y, tower[i].width, tower[i].height);
+			ctx.drawImage(columnImg, tower[i].x, tower[i].y, tower[i].width, tower[i].height);
 		}
-		ctx.fillStyle = column.color;
-		ctx.fillRect(column.x, column.y, column.width, column.height);
+		ctx.drawImage(column.image, column.x, column.y, column.width, column.height);
 	}
 };
 
@@ -222,7 +213,7 @@ const initializeTower = function() {
 		tower.push({
 			x: (canvas.width - column_width)/2,
 			y: (i === 0)?canvas.height - column_height : tower[i-1].y - column_height,
-			color: colors[random(colors.length)],
+			image: columnImg, // random should
 			height: column_height,
 			width: column_width,
 		});
@@ -233,7 +224,7 @@ const initializeColumn = function() {
 	column = {
 			x: 350,
 			y: tower[tower.length - 1].y - column_height,
-			color: colors[random(colors.length)],
+			image: columnImg, // random
 			height: column_height,
 			width: column_width,
 			dx: initial_speed,
