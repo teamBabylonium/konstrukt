@@ -1,16 +1,18 @@
-// TODO
-// FINALIZZZEEEE!
-// noise https://media.giphy.com/media/CQl0tM5gYyqQg/giphy.gif
-
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 canvas.width  = 1707; // plans to make responsive
-canvas.height = 1921;
+canvas.height = 1926;
 document.body.style.zoom = "90%"; // make 90% zoom by default
-// fullscreen
 
 const columnImg = new Image();
 columnImg.src = "pictures/columns/column.png";
+
+const columnFlipImg = new Image();
+columnFlipImg.src = "pictures/columns/columnFlip.png"
+
+const images = [columnImg, columnFlipImg];
+
+/*images[random(im.length)];*/
 
 const column_height = 75;
 const column_width = 200;
@@ -24,11 +26,12 @@ let scoreWithoutBonus = score;
 let highScore = 0;
 let initial_speed = 3;
 let perfect_count = 0;
+let scrollCount = 0;
 
 const playAudio = function() {
 	song = new Audio("sounds/song.mp3");
 	song.loop = true;
-	song.volume = .02;
+	song.volume = .4;
 	song.play();
 }; 
 
@@ -71,9 +74,13 @@ const addColumnToTower = function() {
 const newColumn = function() {
 	column.x = 350;
 	column.y = tower[tower.length - 1].y - column_height;
-	column.image = columnImg // random new image
+	column.image = images[random(images.length)];
 	column.width = tower[tower.length - 1].width;		
 	column.dx = initial_speed + 2 * (scoreWithoutBonus / 5); // removed (score / 10);
+};
+
+const scrollBack = function() {
+	return window.scrollBy(0, + column_height * scrollCount);
 };
 
 const setColumn = function() {
@@ -81,8 +88,11 @@ const setColumn = function() {
 	scoreWithoutBonus++;
 	addColumnToTower();
 	newColumn();
+	
 	if (scoreWithoutBonus > 5) {
-		window.scrollBy(0, - 75);	
+		window.scrollBy(0, - column_height);
+		scoreY -= column_height;
+		scrollCount++;
 	}
 };
 
@@ -90,7 +100,6 @@ const isGameOver = function() {
 	if (column.x + column.width <= tower[tower.length -1].x || 
 		column.x >= tower[tower.length -1].x + tower[tower.length -1].width ) {
 		return true;
-		window.scrollTo(0, canvas.height);
 	}
 	return false;
 };
@@ -146,7 +155,9 @@ const hideIntro = function() {
 	stopIntro = true; // to avoid bugs
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 };
-				
+
+let scoreY = 1000;
+
 const draw = function() {
 	if (!introInProgress) {
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -154,9 +165,9 @@ const draw = function() {
 
 		ctx.fillStyle = "#00C5FD";
 		ctx.font = "28px Lucida console";
-		ctx.fillText("SCORE: " + score, 20, 50); // needs to be visible
+		ctx.fillText("SCORE: " + score, 1500, scoreY); // needs to be visible
 		ctx.font = "25px Lucida console";
-		ctx.fillText("max. " + highScore, 20, 80);
+		ctx.fillText("max. " + highScore, 1500, scoreY + 30);
 
 		ctx.drawImage(plane, x, 1500, 100, 40);
 		x -= xd;
@@ -189,13 +200,15 @@ const clearHighScore = function() {
 };
 
 const startOver = function() {
-		window.scrollTo(0, canvas.height);
+		scrollBack();
 		setHighScore();
 		score = 0;
+		scoreWithoutBonus = 0;
 		perfect_count = 0;
 		tower.length = 0;
 		initializeTower();
 		initializeColumn();
+		scoreY = 1000;
 	};
 	
 const collision = function() { // removed "+ moving_column.dx"
@@ -221,7 +234,7 @@ const initializeTower = function() {
 		tower.push({
 			x: (canvas.width - column_width)/2,
 			y: (i === 0)?canvas.height - column_height : tower[i-1].y - column_height,
-			image: columnImg, // random should
+			image: images[random(images.length)],
 			height: column_height,
 			width: column_width,
 		});
@@ -232,7 +245,7 @@ const initializeColumn = function() {
 	column = {
 			x: 350,
 			y: tower[tower.length - 1].y - column_height,
-			image: columnImg, // random
+			image: images[random(images.length)],
 			height: column_height,
 			width: column_width,
 			dx: initial_speed,
