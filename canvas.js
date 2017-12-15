@@ -5,17 +5,14 @@
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 canvas.width  = 1707; // plans to make responsive
-canvas.height = 960;
+canvas.height = 1921;
 document.body.style.zoom = "90%"; // make 90% zoom by default
 // fullscreen
 
 const column_height = 50;
-const column_width = 300;
+const column_width = 200;
 const initial_height = 3;
-const tower_height_max = 8; // determines starting height to go up from
-const move_down_speed = 1.5; // the speed of canvas scope going up
 let moving = true; 
-let moving_down = false;
 
 const colors = ["#9F5F20", "#004969", "#008080", "#3E1B3C", "#224732"]; // add columns
 const tower = [];
@@ -65,7 +62,6 @@ const addColumnToTower = function() {
 		width: (column.x <= tower[tower.length -1].x)?
 				column.x + column.width - tower[tower.length -1].x :
 				tower[tower.length -1].x + tower[tower.length -1].width - column.x,
-		dy: move_down_speed
 	});
 	isPerfect();
 };
@@ -82,11 +78,7 @@ const setColumn = function() {
 	score++;
 	scoreWithoutBonus++;
 	addColumnToTower();
-	newColumn();	
-	
-	if (tower.length >= tower_height_max) {
-		moving_down = true;							
-	}							
+	newColumn();			
 };
 
 const isGameOver = function() {
@@ -137,7 +129,7 @@ const showIntro = function() {
 		setTimeout(draw0, 0);
 		setTimeout(draw1, 500);
 		setTimeout(draw3, 1500);
-		setTimeout(draw2, 1000);
+		setTimeout(draw2, 800);
 	}
 };
 
@@ -151,7 +143,12 @@ const draw = function() {
 	if (!introInProgress) {
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-		ctx.drawImage(columnImg, 910, 800, 300, 175);
+		/*ctx.drawImage(columnImg, 910, 800, 300, 175);*/
+
+		/*let image = ctx.createPattern(columnImg,"no-repeat");
+		ctx.rect(20, 0, 300, 125);
+		ctx.fillStyle = image;
+		ctx.fill();*/
 
 		ctx.fillStyle = "#00C5FD";
 		ctx.font = "28px Lucida console";
@@ -185,7 +182,7 @@ const setHighScore = function() {
 };
 
 const clearHighScore = function() {
-	localStorage.clear(); // intended console use
+	localStorage.clear(); // intended for console use
 };
 
 const startOver = function() {
@@ -209,20 +206,7 @@ const collision = function() { // removed "+ moving_column.dx"
 	}
 };
 
-const makeMoveDown = function() {
-	if (tower[0].y + tower[0].dy >= canvas.height ) {
-		tower.shift();
-		moving_down = false;
-	}
-	for (let i = 0; i < tower.length; i++) {						
-		tower[i].y += tower[i].dy;
-	}
-	column.y += column.dy;			
-};		
-
 const buildTower = function() {
-	if (moving_down)
-	makeMoveDown();
 	draw();
 	collision();
 	requestAnimationFrame(buildTower);
@@ -236,7 +220,6 @@ const initializeTower = function() {
 			color: colors[random(colors.length)],
 			height: column_height,
 			width: column_width,
-			dy: move_down_speed
 		});
 	}
 };
@@ -249,7 +232,6 @@ const initializeColumn = function() {
 			height: column_height,
 			width: column_width,
 			dx: initial_speed,
-			dy: move_down_speed
 		};
 };
 
