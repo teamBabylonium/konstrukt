@@ -1,18 +1,55 @@
+// TODO
+// FINALIZZZEEEE!
+// noise https://media.giphy.com/media/CQl0tM5gYyqQg/giphy.gif
+
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 canvas.width  = 1707; // plans to make responsive
-canvas.height = 1926;
+canvas.height = 3360;
 document.body.style.zoom = "90%"; // make 90% zoom by default
 
 const columnImg = new Image();
 columnImg.src = "pictures/columns/column.png";
 
 const columnFlipImg = new Image();
-columnFlipImg.src = "pictures/columns/columnFlip.png"
+columnFlipImg.src = "pictures/columns/columnFlip.png";
 
-const images = [columnImg, columnFlipImg];
+const columnPerfect = new Image();
+columnPerfect.src = "pictures/columns/columnPerfect.png";
 
-/*images[random(im.length)];*/
+const background = new Image();
+background.src = "pictures/background.jpg";
+
+const plane = new Image();
+plane.src = "pictures/plane.png";
+let x = 1600;
+let xd = 2;
+
+const introImg0 = new Image();
+introImg0.src = "pictures/intro0.jpg";
+const draw0 = function() {
+	ctx.drawImage(introImg0, 0, 2000, canvas.width, canvas.height - 2000);
+};
+
+const introImg1 = new Image();
+introImg1.src = "pictures/intro1.jpg";
+const draw1 = function() {
+	ctx.drawImage(introImg1, 0, 2000, canvas.width, canvas.height - 2000);
+};
+
+const introImg2 = new Image();
+introImg2.src = "pictures/intro2.jpg";
+const draw2 = function() {
+	ctx.drawImage(introImg2, 0, 2000, canvas.width, canvas.height - 2000);
+};
+
+const introImg3 = new Image();
+introImg3.src = "pictures/intro3.jpg";
+const draw3 = function() {
+	ctx.drawImage(introImg3, 0, 2000, canvas.width, canvas.height - 2000);
+}; // didn't have enough time to create a loop
+
+const images = [columnImg, columnFlipImg, columnPerfect];
 
 const column_height = 75;
 const column_width = 200;
@@ -27,6 +64,7 @@ let highScore = 0;
 let initial_speed = 3;
 let perfect_count = 0;
 let scrollCount = 0;
+let perfect = false;
 
 const playAudio = function() {
 	song = new Audio("sounds/song.mp3");
@@ -41,28 +79,28 @@ const random = function(num) {
 
 const addBonus = function() {
 	score += 4;  // adds 4 bonus + 1 point
-	perfect_count = 0;
 };
 
-const isPerfect = function() {   /// should have antother perfect without _count
+const isPerfect = function() {
 	if (tower.length === initial_height) {
 		return;
-	}
-	if (Math.abs(tower[tower.length - 1].x - tower[tower.length - 2].x) <= 6 &&
-	Math.abs(tower[tower.length - 1].width - tower[tower.length - 2].width) <= 6) {
+	} else if (Math.abs(tower[tower.length - 1].x - tower[tower.length - 2].x) <= 7 &&
+	Math.abs(tower[tower.length - 1].width - tower[tower.length - 2].width) <= 7) {
 		perfect_count++;
-	}
-	if (perfect_count >= 5) {
+		score++; // add 2 points
+		perfect = true;
+	} else if (perfect_count >= 5) {
 		addBonus();
 		scoreWithoutBonus = score - 5; // needed for proper acceleration
+		perfect = false;
 	}
 };
 
 const addColumnToTower = function() {
 	tower.push({
 		x: (column.x <= tower[tower.length -1].x)? tower[tower.length -1].x : column.x,
-		y: tower[tower.length -1].y - column_height,
-		image: columnImg,
+		y: tower[tower.length - 1].y - column_height,
+		image: images[random(images.length)],
 		height: column_height,
 		width: (column.x <= tower[tower.length -1].x)?
 				column.x + column.width - tower[tower.length -1].x :
@@ -76,7 +114,7 @@ const newColumn = function() {
 	column.y = tower[tower.length - 1].y - column_height;
 	column.image = images[random(images.length)];
 	column.width = tower[tower.length - 1].width;		
-	column.dx = initial_speed + 2 * (scoreWithoutBonus / 5); // removed (score / 10);
+	column.dx = initial_speed + 1 * (scoreWithoutBonus / 5); // removed (score / 10);
 };
 
 const scrollBack = function() {
@@ -104,37 +142,6 @@ const isGameOver = function() {
 	return false;
 };
 
-const background = new Image();
-background.src = "pictures/background.jpg";
-
-const plane = new Image();
-plane.src = "pictures/plane.png";
-let x = 1600;
-let xd = 2;
-
-const introImg0 = new Image();
-introImg0.src = "pictures/intro0.jpg";
-const draw0 = function() {
-	ctx.drawImage(introImg0, 0, 1000, canvas.width, canvas.height - 1000);
-};
-
-const introImg1 = new Image();
-introImg1.src = "pictures/intro1.jpg";
-const draw1 = function() {
-	ctx.drawImage(introImg1, 0, 1000, canvas.width, canvas.height - 1000);
-};
-
-const introImg2 = new Image();
-introImg2.src = "pictures/intro2.jpg";
-const draw2 = function() {
-	ctx.drawImage(introImg2, 0, 1000, canvas.width, canvas.height - 1000);
-};
-
-const introImg3 = new Image();
-introImg3.src = "pictures/intro3.jpg";
-const draw3 = function() {
-	ctx.drawImage(introImg3, 0, 1000, canvas.width, canvas.height - 1000);
-}; // didn't have enough time to create a loop
 
 let introInProgress = false;
 let stopIntro;
@@ -156,7 +163,7 @@ const hideIntro = function() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 };
 
-let scoreY = 1000;
+let scoreY = 2500;
 
 const draw = function() {
 	if (!introInProgress) {
@@ -169,11 +176,12 @@ const draw = function() {
 		ctx.font = "25px Lucida console";
 		ctx.fillText("max. " + highScore, 1500, scoreY + 30);
 
-		ctx.drawImage(plane, x, 1500, 100, 40);
+		ctx.drawImage(plane, x, 2800, 110, 50);
+		ctx.drawImage(plane, x - 100, 3000, 110, 50);
 		x -= xd;
 
 		for (let i = 0; i < tower.length; i++) {
-			ctx.drawImage(columnImg, tower[i].x, tower[i].y, tower[i].width, tower[i].height);
+			ctx.drawImage(columnImg, tower[i].x, tower[i].y, tower[i].width, tower[i].height); // the image doesn't change
 		}
 		ctx.drawImage(column.image, column.x, column.y, column.width, column.height);
 	}
@@ -255,6 +263,7 @@ const initializeColumn = function() {
 const spacebar = 32;
 const i = 73;
 const o = 79;
+const p = 80;
 
 document.addEventListener("keydown", function(event) {
 	if (event.keyCode === spacebar) {
@@ -276,21 +285,14 @@ document.addEventListener("keydown", function(event) {
 		hideIntro();
 		let interval = setInterval(showIntro, 1600);
 		clearInterval(interval);
+	} if (event.keyCode === p) {
+		window.scrollTo(0, canvas.height);
 	}
 }, false);
 
 /*document.addEventListener("touchstart", function(event) { // for touch events
 	if (event.target === canvas) {
-		moving = false;
-		if (isGameOver()) {
-			alert("Game over!");
-			startOver();
-		} else {
-			setColumn();
-		}
-		moving = true;
-	}
-}, false);*/
+*/
 
 const startGame = function() {
 	window.scrollTo(0, canvas.height);
