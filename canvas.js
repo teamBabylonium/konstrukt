@@ -1,21 +1,28 @@
-// TODO
-// FINALIZZZEEEE!
-// noise https://media.giphy.com/media/CQl0tM5gYyqQg/giphy.gif
-
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 canvas.width  = 1707; // plans to make responsive
 canvas.height = 3360;
-document.body.style.zoom = "90%"; // make 90% zoom by default
+document.body.style.zoom = "90%";
+
+const colorful = new Image();
+colorful.src = "pictures/columns/colorful.png"
+
+const glass = new Image();
+glass.src = "pictures/columns/column1.png"
 
 const columnImg = new Image();
 columnImg.src = "pictures/columns/column.png";
 
-const columnFlipImg = new Image();
-columnFlipImg.src = "pictures/columns/columnFlip.png";
+const columnAnother = new Image();
+columnAnother.src = "pictures/columns/columnAnother.jpg";
+
+const columnOther = new Image();
+columnOther.src = "pictures/columns/columnOther.jpg";
 
 const columnPerfect = new Image();
 columnPerfect.src = "pictures/columns/columnPerfect.png";
+
+const images = [columnImg, columnPerfect, columnAnother, columnOther, colorful, glass];
 
 const background = new Image();
 background.src = "pictures/background.jpg";
@@ -25,31 +32,34 @@ plane.src = "pictures/plane.png";
 let x = 1600;
 let xd = 2;
 
+const spaceCraft = new Image();
+spaceCraft.src = "pictures/spaceCraft.png";
+let x1 = canvas.width - 100;
+let xd1 = 0.5;
+
 const introImg0 = new Image();
 introImg0.src = "pictures/intro0.jpg";
 const draw0 = function() {
-	ctx.drawImage(introImg0, 0, 2000, canvas.width, canvas.height - 2000);
+	ctx.drawImage(introImg0, 0, canvas.height - 961);
 };
 
 const introImg1 = new Image();
 introImg1.src = "pictures/intro1.jpg";
 const draw1 = function() {
-	ctx.drawImage(introImg1, 0, 2000, canvas.width, canvas.height - 2000);
+	ctx.drawImage(introImg1, 0, canvas.height - 961);
 };
 
 const introImg2 = new Image();
 introImg2.src = "pictures/intro2.jpg";
 const draw2 = function() {
-	ctx.drawImage(introImg2, 0, 2000, canvas.width, canvas.height - 2000);
+	ctx.drawImage(introImg2, 0, canvas.height - 961);
 };
 
 const introImg3 = new Image();
 introImg3.src = "pictures/intro3.jpg";
 const draw3 = function() {
-	ctx.drawImage(introImg3, 0, 2000, canvas.width, canvas.height - 2000);
-}; // didn't have enough time to create a loop
-
-const images = [columnImg, columnFlipImg, columnPerfect];
+	ctx.drawImage(introImg3, 0, canvas.height - 961);
+};
 
 const column_height = 75;
 const column_width = 200;
@@ -66,10 +76,16 @@ let perfect_count = 0;
 let scrollCount = 0;
 let perfect = false;
 
+const scoreNull = function() {
+	if (highScore === null) {
+		highScore = 0;
+	}
+};
+
 const playAudio = function() {
 	song = new Audio("sounds/song.mp3");
 	song.loop = true;
-	song.volume = .4;
+	song.volume = .7;
 	song.play();
 }; 
 
@@ -118,7 +134,8 @@ const newColumn = function() {
 };
 
 const scrollBack = function() {
-	return window.scrollBy(0, + column_height * scrollCount);
+	window.scrollBy(0, + column_height * scrollCount);
+	scoreY += column_height * scrollCount;
 };
 
 const setColumn = function() {
@@ -176,17 +193,18 @@ const draw = function() {
 		ctx.font = "25px Lucida console";
 		ctx.fillText("max. " + highScore, 1500, scoreY + 30);
 
-		ctx.drawImage(plane, x, 2800, 110, 50);
+		ctx.drawImage(spaceCraft, x1, 1700, 200, 100);
+		ctx.drawImage(plane, x + 300, 2500, 110, 50);
 		ctx.drawImage(plane, x - 100, 3000, 110, 50);
 		x -= xd;
+		x1 -= xd1;
 
 		for (let i = 0; i < tower.length; i++) {
-			ctx.drawImage(columnImg, tower[i].x, tower[i].y, tower[i].width, tower[i].height); // the image doesn't change
+			ctx.drawImage(tower[i].image, tower[i].x, tower[i].y, tower[i].width, tower[i].height); // the image doesn't change		
 		}
 		ctx.drawImage(column.image, column.x, column.y, column.width, column.height);
 	}
 };
-
 
 const loadHighScore = function() {
 	highScore = localStorage.getItem("highScore");
@@ -207,6 +225,12 @@ const clearHighScore = function() {
 	localStorage.clear(); // intended for console use
 };
 
+const youWin = function() {
+	if (tower.length >= 42) {
+		alert("You win!");
+	}
+};
+
 const startOver = function() {
 		scrollBack();
 		setHighScore();
@@ -216,7 +240,6 @@ const startOver = function() {
 		tower.length = 0;
 		initializeTower();
 		initializeColumn();
-		scoreY = 1000;
 	};
 	
 const collision = function() { // removed "+ moving_column.dx"
@@ -232,6 +255,7 @@ const collision = function() { // removed "+ moving_column.dx"
 };
 
 const buildTower = function() {
+	youWin();
 	draw();
 	collision();
 	requestAnimationFrame(buildTower);
@@ -301,6 +325,7 @@ const startGame = function() {
 	initializeTower();
 	initializeColumn();
 	buildTower();
+	scoreNull(); // to get rid of null in max
 };
 
-startGame(); 
+startGame();
