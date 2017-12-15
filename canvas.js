@@ -4,28 +4,24 @@ canvas.width  = 1707; // plans to make responsive
 canvas.height = 3360;
 document.body.style.zoom = "90%";
 
-const colorful = new Image();
-colorful.src = "pictures/columns/colorful.png"
-
-const glass = new Image();
-glass.src = "pictures/columns/column1.png"
-
-const columnImg = new Image();
-columnImg.src = "pictures/columns/column.png";
-
-const columnAnother = new Image();
-columnAnother.src = "pictures/columns/columnAnother.jpg";
-
-const columnOther = new Image();
-columnOther.src = "pictures/columns/columnOther.jpg";
-
-const columnPerfect = new Image();
-columnPerfect.src = "pictures/columns/columnPerfect.png";
-
-const images = [columnImg, columnPerfect, columnAnother, columnOther, colorful, glass];
-
 const background = new Image();
 background.src = "pictures/background.jpg";
+
+const column1 = new Image();
+column1.src = "pictures/columns/column1.png"
+const column2 = new Image();
+column2.src = "pictures/columns/column2.png"
+const column3 = new Image();
+column3.src = "pictures/columns/column3.png";
+const column4 = new Image();
+column4.src = "pictures/columns/column4.jpg";
+const column5 = new Image();
+column5.src = "pictures/columns/column5.jpg";
+const column6 = new Image();
+column6.src = "pictures/columns/column6.png";
+const column7 = new Image();
+column7.src = "pictures/columns/column7.png";
+const images = [column1, column2, column3, column4, column5, column6, column7];
 
 const plane = new Image();
 plane.src = "pictures/plane.png";
@@ -37,6 +33,11 @@ spaceCraft.src = "pictures/spaceCraft.png";
 let x1 = canvas.width - 100;
 let xd1 = 0.5;
 
+const ufo = new Image();
+ufo.src = "pictures/ufo.png";
+let y = 1100;
+let yd = 1;
+
 const introImg0 = new Image();
 introImg0.src = "pictures/intro0.jpg";
 const draw0 = function() {
@@ -45,7 +46,7 @@ const draw0 = function() {
 
 const introImg1 = new Image();
 introImg1.src = "pictures/intro1.jpg";
-const draw1 = function() {
+const draw1 = function() {	
 	ctx.drawImage(introImg1, 0, canvas.height - 961);
 };
 
@@ -62,8 +63,8 @@ const draw3 = function() {
 };
 
 const column_height = 75;
-const column_width = 200;
-const initial_height = 3;
+const column_width = 300;
+const initial_height = 5;
 let moving = true; 
 
 const tower = [];
@@ -71,7 +72,7 @@ let column;
 let score = 0;
 let scoreWithoutBonus = score;
 let highScore = 0;
-let initial_speed = 3;
+let initial_speed = 5;
 let perfect_count = 0;
 let scrollCount = 0;
 let perfect = false;
@@ -100,14 +101,17 @@ const addBonus = function() {
 const isPerfect = function() {
 	if (tower.length === initial_height) {
 		return;
-	} else if (Math.abs(tower[tower.length - 1].x - tower[tower.length - 2].x) <= 7 &&
-	Math.abs(tower[tower.length - 1].width - tower[tower.length - 2].width) <= 7) {
+	} else if (Math.abs(tower[tower.length - 1].x - tower[tower.length - 2].x) <= 5 &&
+	Math.abs(tower[tower.length - 1].width - tower[tower.length - 2].width) <= 5) {
+		tower[tower.length - 1].x = tower[tower.length - 2].x;
+		tower[tower.length - 1].width = tower[tower.length - 2].width;
 		perfect_count++;
 		score++; // add 2 points
 		perfect = true;
 	} else if (perfect_count >= 5) {
 		addBonus();
 		scoreWithoutBonus = score - 5; // needed for proper acceleration
+	} else {
 		perfect = false;
 	}
 };
@@ -126,11 +130,11 @@ const addColumnToTower = function() {
 };
 
 const newColumn = function() {
-	column.x = 350;
+	column.x = 350; // ratios of canvas
 	column.y = tower[tower.length - 1].y - column_height;
 	column.image = images[random(images.length)];
 	column.width = tower[tower.length - 1].width;		
-	column.dx = initial_speed + 1 * (scoreWithoutBonus / 5); // removed (score / 10);
+	column.dx = initial_speed + 0.6 + (scoreWithoutBonus / 50);
 };
 
 const scrollBack = function() {
@@ -195,14 +199,27 @@ const draw = function() {
 
 		ctx.drawImage(spaceCraft, x1, 1700, 200, 100);
 		ctx.drawImage(plane, x + 300, 2500, 110, 50);
+		ctx.drawImage(plane, x + 200, 2700, 110, 50);
 		ctx.drawImage(plane, x - 100, 3000, 110, 50);
+		ctx.drawImage(ufo, canvas.width - 600, y, 130, 130);
 		x -= xd;
 		x1 -= xd1;
+		y += yd;
+		if (y > 1150) {
+			yd = -yd;
+		} if (y < 1100) {
+			yd = -yd;
+		}
+
+		if (perfect) {
+			ctx.font = "20px Lucida console";
+			ctx.fillText("perfect", 1500, scoreY + 60);
+		}
 
 		for (let i = 0; i < tower.length; i++) {
 			ctx.drawImage(tower[i].image, tower[i].x, tower[i].y, tower[i].width, tower[i].height); // the image doesn't change		
+			ctx.drawImage(column.image, column.x, column.y, column.width, column.height);
 		}
-		ctx.drawImage(column.image, column.x, column.y, column.width, column.height);
 	}
 };
 
