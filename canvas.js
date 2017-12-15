@@ -12,7 +12,7 @@ document.body.style.zoom = "90%"; // make 90% zoom by default
 const columnImg = new Image();
 columnImg.src = "pictures/columns/column.png";
 
-const column_height = 50;
+const column_height = 75;
 const column_width = 200;
 const initial_height = 3;
 let moving = true; 
@@ -40,11 +40,6 @@ const addBonus = function() {
 	score += 4;  // adds 4 bonus + 1 point
 	perfect_count = 0;
 };
-
-/*const scrollUp = function() {
-	window.scrollBy(0, -100);
-	setTimeout("scrollUp();", 100);
-};*/
 
 const isPerfect = function() {   /// should have antother perfect without _count
 	if (tower.length === initial_height) {
@@ -78,26 +73,35 @@ const newColumn = function() {
 	column.y = tower[tower.length - 1].y - column_height;
 	column.image = columnImg // random new image
 	column.width = tower[tower.length - 1].width;		
-	column.dx = initial_speed + 1.5 * (scoreWithoutBonus / 10); // removed (score / 10);
+	column.dx = initial_speed + 2 * (scoreWithoutBonus / 5); // removed (score / 10);
 };
 
 const setColumn = function() {
 	score++;
 	scoreWithoutBonus++;
 	addColumnToTower();
-	newColumn();			
+	newColumn();
+	if (scoreWithoutBonus > 5) {
+		window.scrollBy(0, - 75);	
+	}
 };
 
 const isGameOver = function() {
 	if (column.x + column.width <= tower[tower.length -1].x || 
 		column.x >= tower[tower.length -1].x + tower[tower.length -1].width ) {
 		return true;
+		window.scrollTo(0, canvas.height);
 	}
 	return false;
 };
 
 const background = new Image();
 background.src = "pictures/background.jpg";
+
+const plane = new Image();
+plane.src = "pictures/plane.png";
+let x = 1600;
+let xd = 2;
 
 const introImg0 = new Image();
 introImg0.src = "pictures/intro0.jpg";
@@ -154,6 +158,9 @@ const draw = function() {
 		ctx.font = "25px Lucida console";
 		ctx.fillText("max. " + highScore, 20, 80);
 
+		ctx.drawImage(plane, x, 1500, 100, 40);
+		x -= xd;
+
 		for (let i = 0; i < tower.length; i++) {
 			ctx.drawImage(columnImg, tower[i].x, tower[i].y, tower[i].width, tower[i].height);
 		}
@@ -182,9 +189,10 @@ const clearHighScore = function() {
 };
 
 const startOver = function() {
+		window.scrollTo(0, canvas.height);
 		setHighScore();
 		score = 0;
-		perfectfect_count = 0;
+		perfect_count = 0;
 		tower.length = 0;
 		initializeTower();
 		initializeColumn();
@@ -253,6 +261,7 @@ document.addEventListener("keydown", function(event) {
 		let interval = setInterval(showIntro, 1600);
 	} if (event.keyCode === o) {
 		hideIntro();
+		let interval = setInterval(showIntro, 1600);
 		clearInterval(interval);
 	}
 }, false);
@@ -271,6 +280,7 @@ document.addEventListener("keydown", function(event) {
 }, false);*/
 
 const startGame = function() {
+	window.scrollTo(0, canvas.height);
 	loadHighScore();
 	playAudio();
 	initializeTower();
