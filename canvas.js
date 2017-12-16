@@ -148,7 +148,7 @@ const setColumn = function() {
 	addColumnToTower();
 	newColumn();
 	
-	if (scoreWithoutBonus > 5) {
+	if (scoreWithoutBonus > 3) {
 		window.scrollBy(0, - column_height);
 		scoreY -= column_height;
 		scrollCount++;
