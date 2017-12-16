@@ -106,8 +106,8 @@ const addBonus = function() {
 const isPerfect = function() {
 	if (tower.length === initial_height) {
 		return;
-	} else if (Math.abs(tower[tower.length - 1].x - tower[tower.length - 2].x) <= 5 &&
-	Math.abs(tower[tower.length - 1].width - tower[tower.length - 2].width) <= 5) {
+	} else if (Math.abs(tower[tower.length - 1].x - tower[tower.length - 2].x) <= 7 &&
+	Math.abs(tower[tower.length - 1].width - tower[tower.length - 2].width) <= 7) {
 		tower[tower.length - 1].x = tower[tower.length - 2].x;
 		tower[tower.length - 1].width = tower[tower.length - 2].width;
 		perfect_count++;
