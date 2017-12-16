@@ -331,9 +331,17 @@ document.addEventListener("keydown", function(event) {
 	}
 }, false);
 
-/*document.addEventListener("touchstart", function(event) { // for touch events
+document.addEventListener("touchstart", function(event) { // for touch events
 	if (event.target === canvas) {
-*/
+		moving = false;
+		if (isGameOver()) {
+			alert("Game over!");
+			startOver();
+		} else {
+			setColumn();
+		}
+	}
+}, false);
 
 const startGame = function() {
 	window.scrollTo(0, canvas.height);
