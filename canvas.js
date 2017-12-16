@@ -2,7 +2,7 @@ const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 canvas.width  = 1707; // plans to make responsive
 canvas.height = 3360;
-document.body.style.zoom = "90%";
+document.body.style.zoom = "70%";
 
 const background = new Image();
 background.src = "pictures/background.jpg";
