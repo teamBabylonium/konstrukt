@@ -2,7 +2,7 @@ const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 canvas.width  = 1707; // plans to make responsive
 canvas.height = 3360;
-document.body.style.zoom = "70%";
+document.body.style.zoom = "90%";
 
 const background = new Image();
 background.src = "pictures/background.jpg";
@@ -193,9 +193,9 @@ const draw = function() {
 
 		ctx.fillStyle = "#00C5FD";
 		ctx.font = "28px Lucida console";
-		ctx.fillText("SCORE: " + score, 1300, scoreY); // needs to be visible
+		ctx.fillText("SCORE: " + score, canvas.width/2, scoreY); // needs to be visible
 		ctx.font = "25px Lucida console";
-		ctx.fillText("max. " + highScore, 1300, scoreY + 30);
+		ctx.fillText("max. " + highScore, canvas.width/2, scoreY + 30);
 
 		ctx.drawImage(spaceCraft, x1, 1700, 200, 100);
 		ctx.drawImage(plane, x + 300, 2500, 110, 50);
@@ -213,7 +213,7 @@ const draw = function() {
 
 		if (perfect) {
 			ctx.font = "20px Lucida console";
-			ctx.fillText("perfect", 1300, scoreY + 60);
+			ctx.fillText("perfect", canvas.width/2, scoreY + 60);
 		}
 
 		for (let i = 0; i < tower.length; i++) {
