@@ -336,10 +336,12 @@ document.addEventListener("touchstart", function(event) { // for touch events
 		moving = false;
 		if (isGameOver()) {
 			alert("Game over!");
+			window.scrollTo(0, canvas.height);
 			startOver();
 		} else {
 			setColumn();
 		}
+		moving = true;
 	}
 }, false);
 
