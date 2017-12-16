@@ -193,9 +193,9 @@ const draw = function() {
 
 		ctx.fillStyle = "#00C5FD";
 		ctx.font = "28px Lucida console";
-		ctx.fillText("SCORE: " + score, 1500, scoreY); // needs to be visible
+		ctx.fillText("SCORE: " + score, 1300, scoreY); // needs to be visible
 		ctx.font = "25px Lucida console";
-		ctx.fillText("max. " + highScore, 1500, scoreY + 30);
+		ctx.fillText("max. " + highScore, 1300, scoreY + 30);
 
 		ctx.drawImage(spaceCraft, x1, 1700, 200, 100);
 		ctx.drawImage(plane, x + 300, 2500, 110, 50);
@@ -213,7 +213,7 @@ const draw = function() {
 
 		if (perfect) {
 			ctx.font = "20px Lucida console";
-			ctx.fillText("perfect", 1500, scoreY + 60);
+			ctx.fillText("perfect", 1300, scoreY + 60);
 		}
 
 		for (let i = 0; i < tower.length; i++) {
